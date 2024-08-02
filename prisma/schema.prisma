@@ -14,7 +14,25 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String
-  email    String
+  id         String   @id @default(uuid())
+  username   String   @unique
+  email      String   @unique
+  joinedAt   DateTime @default(now())
+  lastOnline DateTime
+  profileImg String?
+  coverImg   String?
+  posts      Post[]   @relation("author")
+  likes      Post[]   @relation("likes")
+
+  @@index([username])
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  post      String?
+  postImg   String?
+  author    User     @relation("author", fields: [authorId], references: [id])
+  authorId  String
+  likedBy   User[]   @relation("likes")
+  createdAt DateTime @default(now())
 }
