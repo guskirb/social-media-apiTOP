@@ -1,9 +1,9 @@
 import express from "express";
 const router = express.Router();
 
+import { get_users } from "../controllers/user-controller";
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get("/", get_users);
 
 module.exports = router;
