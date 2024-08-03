@@ -14,17 +14,19 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  username   String    @unique
-  email      String    @unique
-  password   String
-  joinedAt   DateTime  @default(now())
-  lastOnline DateTime  @default(now())
-  profileImg String?
-  coverImg   String?
-  posts      Post[]    @relation("author")
-  likes      Post[]    @relation("likes")
-  Comment    Comment[]
+  id               String          @id @default(uuid())
+  username         String          @unique
+  email            String          @unique
+  password         String
+  joinedAt         DateTime        @default(now())
+  lastOnline       DateTime        @default(now())
+  profileImg       String?
+  coverImg         String?
+  posts            Post[]          @relation("author")
+  likes            Post[]          @relation("likes")
+  comments         Comment[]
+  requests         FriendRequest[] @relation("to")
+  outgoingRequests FriendRequest[] @relation("from")
 
   @@index([username])
 }
@@ -48,4 +50,12 @@ model Comment {
   authorId   String
   post       Post    @relation(fields: [postId], references: [id])
   postId     String
+}
+
+model FriendRequest {
+  id         String @id @default(uuid())
+  to         User   @relation("to", fields: [toUserId], references: [id])
+  toUserId   String
+  from       User   @relation("from", fields: [fromUserId], references: [id])
+  fromUserId String
 }
