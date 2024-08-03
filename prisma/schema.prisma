@@ -25,6 +25,8 @@ model User {
   posts            Post[]          @relation("author")
   likes            Post[]          @relation("likes")
   comments         Comment[]
+  friends          User[]          @relation("friends")
+  symmetricFriends User[]          @relation("friends")
   requests         FriendRequest[] @relation("to")
   outgoingRequests FriendRequest[] @relation("from")
 
