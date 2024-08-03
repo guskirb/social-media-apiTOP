@@ -14,26 +14,38 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  username   String   @unique
-  email      String   @unique
+  id         String    @id @default(uuid())
+  username   String    @unique
+  email      String    @unique
   password   String
-  joinedAt   DateTime @default(now())
-  lastOnline DateTime @default(now())
+  joinedAt   DateTime  @default(now())
+  lastOnline DateTime  @default(now())
   profileImg String?
   coverImg   String?
-  posts      Post[]   @relation("author")
-  likes      Post[]   @relation("likes")
+  posts      Post[]    @relation("author")
+  likes      Post[]    @relation("likes")
+  Comment    Comment[]
 
   @@index([username])
 }
 
 model Post {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   post      String?
   postImg   String?
-  author    User     @relation("author", fields: [authorId], references: [id])
+  author    User      @relation("author", fields: [authorId], references: [id])
   authorId  String
-  likedBy   User[]   @relation("likes")
-  createdAt DateTime @default(now())
+  likedBy   User[]    @relation("likes")
+  createdAt DateTime  @default(now())
+  Comment   Comment[]
+}
+
+model Comment {
+  id         String  @id @default(uuid())
+  comment    String?
+  commentImg String?
+  author     User    @relation(fields: [authorId], references: [id])
+  authorId   String
+  post       Post    @relation(fields: [postId], references: [id])
+  postId     String
 }
