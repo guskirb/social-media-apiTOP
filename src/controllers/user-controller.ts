@@ -7,8 +7,14 @@ import { prisma } from "../lib/prisma";
 import { issueJWT } from "../utils/issue-jwt";
 
 export const get_users = asyncHandler(async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-  
+  const users = await prisma.user.findMany({
+    include: {
+      friends: true,
+      requests: true,
+      outgoingRequests: true,
+    },
+  });
+
   res.status(200).json({
     success: true,
     users,
