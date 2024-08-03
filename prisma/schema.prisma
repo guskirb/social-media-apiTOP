@@ -18,6 +18,8 @@ model User {
   username         String          @unique
   email            String          @unique
   password         String
+  name             String?
+  bio              String?
   joinedAt         DateTime        @default(now())
   lastOnline       DateTime        @default(now())
   profileImg       String?

@@ -63,7 +63,6 @@ export const create_user = [
         success: false,
         errors: errors.array(),
       });
-      return;
     }
 
     const hashedPass = await bcrypt.hash(req.body.password, 10);
@@ -79,7 +78,6 @@ export const create_user = [
       success: true,
       user: newUser,
     });
-    return;
   }),
 ];
 
@@ -93,7 +91,7 @@ export const log_in = [
         },
       });
       if (!user) {
-        return new Error();
+        throw new Error();
       }
     })
     .escape(),
@@ -125,7 +123,6 @@ export const log_in = [
         success: false,
         errors: errors.array(),
       });
-      return;
     }
 
     const user = await prisma.user.findFirst({
@@ -141,6 +138,36 @@ export const log_in = [
       token: jwt.token,
       expires: jwt.expires,
     });
-    return;
+  }),
+];
+
+export const update_user = [
+  body("name").isLength({ max: 30 }).trim().escape(),
+  body("bio").isLength({ max: 200 }).trim().escape(),
+
+  asyncHandler(async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+    }
+
+    const user = await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: {
+        name: req.body.name,
+        bio: req.body.bio,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
   }),
 ];
