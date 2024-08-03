@@ -44,8 +44,8 @@ export const accept_request = asyncHandler(
   async (req: Request, res: Response) => {
     const existingRequest = await prisma.friendRequest.findFirst({
       where: {
-        toUserId: req.params.id,
-        fromUserId: req.user.id,
+        toUserId: req.user.id,
+        fromUserId: req.params.id,
       },
     });
 
@@ -70,9 +70,36 @@ export const accept_request = asyncHandler(
 
       res.status(200).json({
         success: true,
-        addFriendTo,
-        addFriendFrom,
-        deleteReq,
+        msg: "Request accepted",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        msg: "Request doesn't exist",
+      });
+    }
+  }
+);
+
+export const decline_request = asyncHandler(
+  async (req: Request, res: Response) => {
+    const existingRequest = await prisma.friendRequest.findFirst({
+      where: {
+        toUserId: req.user.id,
+        fromUserId: req.params.id,
+      },
+    });
+
+    if (existingRequest) {
+      await prisma.friendRequest.delete({
+        where: {
+          id: existingRequest.id,
+        },
+      });
+
+      res.status(200).json({
+        success: true,
+        msg: "Request declined",
       });
     } else {
       res.status(400).json({
