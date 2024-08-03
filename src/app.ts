@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { userFromJWT } from "./middleware/user-from-jwt";
 import "./config/passport";
+import "./config/cloudinary";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
