@@ -157,7 +157,7 @@ export const update_user = [
 
     const user = await prisma.user.update({
       where: {
-        id: req.user.id,
+        id: req.user!.id,
       },
       data: {
         name: req.body.name,

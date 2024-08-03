@@ -5,11 +5,11 @@ import { prisma } from "../lib/prisma";
 
 export const send_request = asyncHandler(
   async (req: Request, res: Response) => {
-    if (req.params.id !== req.user.id) {
+    if (req.params.id !== req.user!.id) {
       const existingRequest = await prisma.friendRequest.findFirst({
         where: {
           toUserId: req.params.id,
-          fromUserId: req.user.id,
+          fromUserId: req.user!.id,
         },
       });
 
@@ -17,7 +17,7 @@ export const send_request = asyncHandler(
         const request = await prisma.friendRequest.create({
           data: {
             toUserId: req.params.id,
-            fromUserId: req.user.id,
+            fromUserId: req.user!.id,
           },
         });
 
@@ -44,7 +44,7 @@ export const accept_request = asyncHandler(
   async (req: Request, res: Response) => {
     const existingRequest = await prisma.friendRequest.findFirst({
       where: {
-        toUserId: req.user.id,
+        toUserId: req.user!.id,
         fromUserId: req.params.id,
       },
     });
@@ -54,10 +54,10 @@ export const accept_request = asyncHandler(
         [
           prisma.user.update({
             where: { id: req.params.id },
-            data: { friends: { connect: [{ id: req.user.id }] } },
+            data: { friends: { connect: [{ id: req.user!.id }] } },
           }),
           prisma.user.update({
-            where: { id: req.user.id },
+            where: { id: req.user!.id },
             data: { friends: { connect: [{ id: req.params.id }] } },
           }),
           prisma.friendRequest.delete({
@@ -85,7 +85,7 @@ export const decline_request = asyncHandler(
   async (req: Request, res: Response) => {
     const existingRequest = await prisma.friendRequest.findFirst({
       where: {
-        toUserId: req.user.id,
+        toUserId: req.user!.id,
         fromUserId: req.params.id,
       },
     });
