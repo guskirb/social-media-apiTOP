@@ -5,6 +5,23 @@ import { v2 as cloudinary } from "cloudinary";
 
 import { prisma } from "../lib/prisma";
 
+export const get_post = asyncHandler(async (req: Request, res: Response) => {
+  const post = await prisma.post.findFirst({
+    where: {
+      id: req.params.id,
+    },
+    include: {
+      likedBy: true,
+      comments: true,
+    },
+  });
+
+  res.status(200).json({
+    success: true,
+    post,
+  });
+});
+
 export const create_post = [
   body("post").optional().isLength({ max: 200 }).escape(),
 
@@ -65,3 +82,34 @@ export const create_post = [
   }),
 ];
 
+export const like_post = asyncHandler(async (req: Request, res: Response) => {
+  const post = await prisma.post.update({
+    where: {
+      id: req.params.id,
+    },
+    data: {
+      likedBy: { connect: [{ id: req.user!.id }] },
+    },
+  });
+
+  res.status(200).json({
+    success: true,
+    post,
+  });
+});
+
+export const unlike_post = asyncHandler(async (req: Request, res: Response) => {
+  const post = await prisma.post.update({
+    where: {
+      id: req.params.id,
+    },
+    data: {
+      likedBy: { disconnect: [{ id: req.user!.id }] },
+    },
+  });
+
+  res.status(200).json({
+    success: true,
+    post,
+  });
+});
