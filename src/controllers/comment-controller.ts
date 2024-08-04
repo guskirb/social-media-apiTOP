@@ -61,8 +61,34 @@ export const create_comment = [
     } else {
       res.status(400).json({
         success: false,
-        msg: "No post data submitted",
+        msg: "No comment data submitted",
       });
     }
   }),
 ];
+
+export const delete_comment = asyncHandler(
+  async (req: Request, res: Response) => {
+    const comment = await prisma.comment.findFirst({
+      where: {
+        id: req.params.commentId,
+      },
+    });
+
+    if (comment?.authorId === req.user!.id) {
+      await prisma.comment.delete({
+        where: { id: req.params.commentId },
+      });
+
+      res.status(200).json({
+        success: true,
+        msg: "Comment deleted",
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        msg: "Not authorised to delete this post",
+      });
+    }
+  }
+);
