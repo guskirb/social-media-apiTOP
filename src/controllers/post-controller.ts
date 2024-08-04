@@ -76,7 +76,7 @@ export const create_post = [
     } else {
       res.status(400).json({
         success: false,
-        msg: "No post",
+        msg: "No post data submitted",
       });
     }
   }),

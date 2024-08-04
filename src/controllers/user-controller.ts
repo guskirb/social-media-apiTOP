@@ -45,6 +45,7 @@ export const get_me = asyncHandler(async (req: Request, res: Response) => {
       id: req.user!.id,
     },
     include: {
+      comments: true,
       posts: true,
       likes: true,
       friends: true,

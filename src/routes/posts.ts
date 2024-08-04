@@ -12,6 +12,8 @@ import {
   unlike_post,
 } from "../controllers/post-controller";
 
+import comments_router from "./comments";
+
 router.post(
   "/create",
   passport.authenticate("jwt", { session: false }),
@@ -38,5 +40,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   unlike_post
 );
+
+router.use("/:id/comments", comments_router);
 
 export default router;
