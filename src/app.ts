@@ -8,6 +8,7 @@ import "./config/cloudinary";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
+import postsRouter from "./routes/posts";
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.use(userFromJWT);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/posts", postsRouter);
 
 export default app;
