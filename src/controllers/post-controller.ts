@@ -113,3 +113,25 @@ export const unlike_post = asyncHandler(async (req: Request, res: Response) => {
     post,
   });
 });
+
+export const delete_post = asyncHandler(async (req: Request, res: Response) => {
+  const post = await prisma.post.findFirst({
+    where: { id: req.params.id },
+  });
+
+  if (post?.authorId === req.user!.id) {
+    await prisma.post.delete({
+      where: { id: req.params.id },
+    });
+
+    res.status(200).json({
+      success: true,
+      msg: "Post deleted",
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      msg: "Not authorised to delete this post",
+    });
+  }
+});

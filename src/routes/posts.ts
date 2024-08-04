@@ -6,6 +6,7 @@ import { upload } from "../config/multer";
 
 import {
   create_post,
+  delete_post,
   get_post,
   like_post,
   unlike_post,
@@ -19,6 +20,12 @@ router.post(
 );
 
 router.get("/:id", passport.authenticate("jwt", { session: false }), get_post);
+
+router.post(
+  "/:id/delete",
+  passport.authenticate("jwt", { session: false }),
+  delete_post
+);
 
 router.post(
   "/:id/like",
