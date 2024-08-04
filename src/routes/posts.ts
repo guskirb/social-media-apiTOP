@@ -4,7 +4,7 @@ import passport from "passport";
 
 import { upload } from "../config/multer";
 
-import { create_post, delete_posts } from "../controllers/post-controller";
+import { create_post } from "../controllers/post-controller";
 
 router.post(
   "/create",
