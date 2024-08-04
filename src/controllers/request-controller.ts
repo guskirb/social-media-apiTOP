@@ -50,23 +50,21 @@ export const accept_request = asyncHandler(
     });
 
     if (existingRequest) {
-      const [addFriendTo, addFriendFrom, deleteReq] = await prisma.$transaction(
-        [
-          prisma.user.update({
-            where: { id: req.params.id },
-            data: { friends: { connect: [{ id: req.user!.id }] } },
-          }),
-          prisma.user.update({
-            where: { id: req.user!.id },
-            data: { friends: { connect: [{ id: req.params.id }] } },
-          }),
-          prisma.friendRequest.delete({
-            where: {
-              id: existingRequest.id,
-            },
-          }),
-        ]
-      );
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: req.params.id },
+          data: { friends: { connect: [{ id: req.user!.id }] } },
+        }),
+        prisma.user.update({
+          where: { id: req.user!.id },
+          data: { friends: { connect: [{ id: req.params.id }] } },
+        }),
+        prisma.friendRequest.delete({
+          where: {
+            id: existingRequest.id,
+          },
+        }),
+      ]);
 
       res.status(200).json({
         success: true,
