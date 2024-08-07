@@ -8,11 +8,14 @@ import {
   create_post,
   delete_post,
   get_post,
+  get_posts,
   like_post,
   unlike_post,
 } from "../controllers/post-controller";
 
 import comments_router from "./comments";
+
+router.get("/", passport.authenticate("jwt", { session: false }), get_posts);
 
 router.post(
   "/create",

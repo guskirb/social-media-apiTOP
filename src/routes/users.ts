@@ -24,7 +24,7 @@ router.get("/me", passport.authenticate("jwt", { session: false }), get_me);
 
 router.post("/create", create_user);
 
-router.post("/log-in", log_in);
+router.post("/login", log_in);
 
 router.post(
   "/update",

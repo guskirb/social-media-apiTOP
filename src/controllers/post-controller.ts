@@ -22,6 +22,29 @@ export const get_post = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+export const get_posts = asyncHandler(async (req: Request, res: Response) => {
+  const friends = await prisma.user.findFirst({
+    where: { id: req.user!.id },
+    select: { friends: { select: { id: true } } },
+  });
+
+  const posts = await prisma.post.findMany({
+    where: {
+      author: {
+        id: { in: [...friends!.friends.map((user) => user.id), req.user!.id] },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  res.status(200).json({
+    success: true,
+    posts,
+  });
+});
+
 export const create_post = [
   body("post").optional().isLength({ max: 200 }).escape(),
 
