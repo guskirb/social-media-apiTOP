@@ -34,6 +34,10 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
         id: { in: [...friends!.friends.map((user) => user.id), req.user!.id] },
       },
     },
+    include: {
+      likedBy: true,
+      comments: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
