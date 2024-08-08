@@ -50,6 +50,8 @@ export const get_by_username = asyncHandler(
         posts: {
           include: {
             author: true,
+            likedBy: true,
+            comments: true,
           },
         },
         likes: true,
