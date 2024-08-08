@@ -47,7 +47,11 @@ export const get_by_username = asyncHandler(
       },
       include: {
         comments: true,
-        posts: true,
+        posts: {
+          include: {
+            author: true,
+          },
+        },
         likes: true,
         friends: true,
       },

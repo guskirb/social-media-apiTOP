@@ -35,6 +35,7 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
       },
     },
     include: {
+      author: true,
       likedBy: true,
       comments: true,
     },
