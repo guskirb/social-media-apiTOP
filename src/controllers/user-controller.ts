@@ -39,6 +39,27 @@ export const get_user = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+export const get_by_username = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await prisma.user.findFirst({
+      where: {
+        username: req.params.username,
+      },
+      include: {
+        comments: true,
+        posts: true,
+        likes: true,
+        friends: true,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  }
+);
+
 export const get_me = asyncHandler(async (req: Request, res: Response) => {
   const user = await prisma.user.findFirst({
     where: {

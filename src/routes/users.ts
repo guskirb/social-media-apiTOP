@@ -9,6 +9,7 @@ import {
   update_user,
   get_user,
   get_me,
+  get_by_username,
 } from "../controllers/user-controller";
 import {
   send_request,
@@ -31,6 +32,8 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   update_user
 );
+
+router.get("/:username", get_by_username);
 
 router.get("/:id", get_user);
 
