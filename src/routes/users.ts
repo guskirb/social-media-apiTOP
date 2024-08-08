@@ -33,7 +33,7 @@ router.post(
   update_user
 );
 
-router.get("/:username", get_by_username);
+router.get("/username/:username", get_by_username);
 
 router.get("/:id", get_user);
 
