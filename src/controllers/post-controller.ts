@@ -84,6 +84,11 @@ export const create_post = [
             postImg: response.secure_url,
             authorId: req.user!.id,
           },
+          include: {
+            author: true,
+            likedBy: true,
+            comments: true,
+          },
         });
         res.status(201).json({
           success: true,
@@ -94,6 +99,11 @@ export const create_post = [
           data: {
             post: req.body.post,
             authorId: req.user!.id,
+          },
+          include: {
+            author: true,
+            likedBy: true,
+            comments: true,
           },
         });
         res.status(201).json({
