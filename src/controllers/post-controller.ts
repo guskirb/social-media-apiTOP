@@ -128,6 +128,11 @@ export const like_post = asyncHandler(async (req: Request, res: Response) => {
     data: {
       likedBy: { connect: [{ id: req.user!.id }] },
     },
+    include: {
+      author: true,
+      likedBy: true,
+      comments: true,
+    },
   });
 
   res.status(200).json({
@@ -143,6 +148,11 @@ export const unlike_post = asyncHandler(async (req: Request, res: Response) => {
     },
     data: {
       likedBy: { disconnect: [{ id: req.user!.id }] },
+    },
+    include: {
+      author: true,
+      likedBy: true,
+      comments: true,
     },
   });
 
