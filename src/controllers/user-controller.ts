@@ -77,7 +77,13 @@ export const get_me = asyncHandler(async (req: Request, res: Response) => {
     include: {
       comments: true,
       posts: true,
-      likes: true,
+      likes: {
+        include: {
+          author: true,
+          likedBy: true,
+          comments: true,
+        },
+      },
       friends: true,
       requests: true,
       outgoingRequests: true,
