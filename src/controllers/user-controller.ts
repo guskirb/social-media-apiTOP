@@ -53,6 +53,9 @@ export const get_by_username = asyncHandler(
             likedBy: true,
             comments: true,
           },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
         likes: true,
         friends: true,
