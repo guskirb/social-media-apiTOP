@@ -84,6 +84,9 @@ export const get_me = asyncHandler(async (req: Request, res: Response) => {
           likedBy: true,
           comments: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
       friends: true,
       requests: true,
