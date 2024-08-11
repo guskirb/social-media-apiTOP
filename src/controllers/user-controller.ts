@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import { v2 as cloudinary } from "cloudinary";
 
 import { prisma } from "../lib/prisma";
 import { issueJWT } from "../utils/issue-jwt";
@@ -230,14 +231,34 @@ export const update_user = [
       });
     }
 
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const newUser = {
+      name: req.body.name,
+      bio: req.body.bio,
+    };
+
+    for (const file in files) {
+      let result = await cloudinary.uploader.upload(
+        files[file][0].path,
+        function (err, result) {
+          if (err) {
+            res.status(500).json({
+              success: false,
+              error: "Failed to upload",
+            });
+            return;
+          }
+          return result;
+        }
+      );
+      newUser[file as keyof typeof newUser] = result.secure_url;
+    }
+
     const user = await prisma.user.update({
       where: {
         id: req.user!.id,
       },
-      data: {
-        name: req.body.name,
-        bio: req.body.bio,
-      },
+      data: newUser,
     });
 
     res.status(200).json({

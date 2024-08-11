@@ -2,6 +2,8 @@ import express from "express";
 const router = express.Router();
 import passport from "passport";
 
+import { upload } from "../config/multer";
+
 import {
   get_users,
   create_user,
@@ -30,6 +32,10 @@ router.post("/login", log_in);
 router.post(
   "/update",
   passport.authenticate("jwt", { session: false }),
+  upload.fields([
+    { name: "profileImg", maxCount: 1 },
+    { name: "coverImg", maxCount: 1 },
+  ]),
   update_user
 );
 
