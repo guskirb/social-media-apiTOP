@@ -174,6 +174,7 @@ export const delete_post = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
+      id: req.params.id,
       msg: "Post deleted",
     });
   } else {
