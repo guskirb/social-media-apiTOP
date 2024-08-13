@@ -11,6 +11,7 @@ export const get_post = asyncHandler(async (req: Request, res: Response) => {
       id: req.params.id,
     },
     include: {
+      author: true,
       likedBy: true,
       comments: true,
     },
