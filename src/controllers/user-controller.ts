@@ -56,7 +56,14 @@ export const get_by_username = asyncHandler(
           include: {
             author: true,
             likedBy: true,
-            comments: true,
+            comments: {
+              include: {
+                author: true,
+              },
+              orderBy: {
+                createdAt: "desc",
+              },
+            },
           },
           orderBy: {
             createdAt: "desc",
@@ -86,7 +93,14 @@ export const get_me = asyncHandler(async (req: Request, res: Response) => {
         include: {
           author: true,
           likedBy: true,
-          comments: true,
+          comments: {
+            include: {
+              author: true,
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

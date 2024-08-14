@@ -17,6 +17,9 @@ export const get_post = asyncHandler(async (req: Request, res: Response) => {
         include: {
           author: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
     },
   });
@@ -45,6 +48,9 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
       comments: {
         include: {
           author: true,
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       },
     },
@@ -168,6 +174,9 @@ export const unlike_post = asyncHandler(async (req: Request, res: Response) => {
       comments: {
         include: {
           author: true,
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       },
     },

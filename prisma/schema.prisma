@@ -43,17 +43,18 @@ model Post {
   authorId  String
   likedBy   User[]    @relation("likes")
   createdAt DateTime  @default(now())
-  comments   Comment[]
+  comments  Comment[]
 }
 
 model Comment {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
   comment    String?
   commentImg String?
-  author     User    @relation(fields: [authorId], references: [id])
+  author     User     @relation(fields: [authorId], references: [id])
   authorId   String
-  post       Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId     String
+  createdAt  DateTime @default(now())
 }
 
 model FriendRequest {

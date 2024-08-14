@@ -23,5 +23,13 @@ export const prisma =
           },
         },
       },
+      comment: {
+        createdFormatted: {
+          needs: { createdAt: true },
+          compute(comment) {
+            return DateTime.fromJSDate(comment.createdAt).toRelative();
+          },
+        },
+      }
     },
   });
