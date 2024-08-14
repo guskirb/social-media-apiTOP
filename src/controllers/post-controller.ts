@@ -13,7 +13,11 @@ export const get_post = asyncHandler(async (req: Request, res: Response) => {
     include: {
       author: true,
       likedBy: true,
-      comments: true,
+      comments: {
+        include: {
+          author: true,
+        },
+      },
     },
   });
 
@@ -38,7 +42,11 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
     include: {
       author: true,
       likedBy: true,
-      comments: true,
+      comments: {
+        include: {
+          author: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -132,7 +140,11 @@ export const like_post = asyncHandler(async (req: Request, res: Response) => {
     include: {
       author: true,
       likedBy: true,
-      comments: true,
+      comments: {
+        include: {
+          author: true,
+        },
+      },
     },
   });
 
@@ -153,7 +165,11 @@ export const unlike_post = asyncHandler(async (req: Request, res: Response) => {
     include: {
       author: true,
       likedBy: true,
-      comments: true,
+      comments: {
+        include: {
+          author: true,
+        },
+      },
     },
   });
 

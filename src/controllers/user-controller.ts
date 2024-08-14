@@ -47,7 +47,11 @@ export const get_by_username = asyncHandler(
         username: req.params.username,
       },
       include: {
-        comments: true,
+        comments: {
+          include: {
+            author: true,
+          },
+        },
         posts: {
           include: {
             author: true,

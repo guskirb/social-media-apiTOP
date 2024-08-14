@@ -40,6 +40,9 @@ export const create_comment = [
             authorId: req.user!.id,
             postId: req.params.id,
           },
+          include: {
+            author: true,
+          },
         });
         res.status(201).json({
           success: true,
@@ -51,6 +54,9 @@ export const create_comment = [
             comment: req.body.comment,
             authorId: req.user!.id,
             postId: req.params.id,
+          },
+          include: {
+            author: true,
           },
         });
         res.status(201).json({
