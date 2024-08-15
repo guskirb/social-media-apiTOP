@@ -3,6 +3,34 @@ import asyncHandler from "express-async-handler";
 
 import { prisma } from "../lib/prisma";
 
+export const get_requests = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: req.user!.id,
+      },
+      include: {
+        requests: {
+          include: {
+            from: true,
+          },
+        },
+        outgoingRequests: {
+          include: {
+            to: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      requests: user?.requests,
+      outgoingRequests: user?.outgoingRequests,
+    });
+  }
+);
+
 export const send_request = asyncHandler(
   async (req: Request, res: Response) => {
     if (req.params.id !== req.user!.id) {

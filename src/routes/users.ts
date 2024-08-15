@@ -17,6 +17,7 @@ import {
   send_request,
   accept_request,
   decline_request,
+  get_requests,
 } from "../controllers/request-controller";
 import { remove_friend } from "../controllers/friend-controller";
 
@@ -24,6 +25,12 @@ import { remove_friend } from "../controllers/friend-controller";
 router.get("/", get_users);
 
 router.get("/me", passport.authenticate("jwt", { session: false }), get_me);
+
+router.get(
+  "/requests",
+  passport.authenticate("jwt", { session: false }),
+  get_requests
+);
 
 router.post("/create", create_user);
 
