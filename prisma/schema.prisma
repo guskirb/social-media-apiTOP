@@ -58,9 +58,10 @@ model Comment {
 }
 
 model FriendRequest {
-  id         String @id @default(uuid())
-  to         User   @relation("to", fields: [toUserId], references: [id])
+  id         String   @id @default(uuid())
+  to         User     @relation("to", fields: [toUserId], references: [id])
   toUserId   String
-  from       User   @relation("from", fields: [fromUserId], references: [id])
+  from       User     @relation("from", fields: [fromUserId], references: [id])
   fromUserId String
+  sentAt     DateTime @default(now())
 }
