@@ -80,7 +80,7 @@ export const delete_comment = asyncHandler(
         id: req.params.commentId,
       },
     });
-
+    
     if (comment?.authorId === req.user!.id) {
       await prisma.comment.delete({
         where: { id: req.params.commentId },
@@ -88,12 +88,13 @@ export const delete_comment = asyncHandler(
 
       res.status(200).json({
         success: true,
+        comment,
         msg: "Comment deleted",
       });
     } else {
       res.status(401).json({
         success: false,
-        msg: "Not authorised to delete this post",
+        msg: "Not authorised to delete this comment",
       });
     }
   }
