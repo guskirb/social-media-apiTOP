@@ -43,11 +43,23 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
       },
     },
     include: {
-      author: true,
+      author: {
+        select: {
+          username: true,
+          name: true,
+          profileImg: true,
+        },
+      },
       likedBy: true,
       comments: {
         include: {
-          author: true,
+          author: {
+            select: {
+              username: true,
+              name: true,
+              profileImg: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
