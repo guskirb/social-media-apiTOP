@@ -243,3 +243,101 @@ export const delete_post = asyncHandler(async (req: Request, res: Response) => {
     });
   }
 });
+
+export const get_user_posts = asyncHandler(
+  async (req: Request, res: Response) => {
+    const page: number = parseInt(req.query.page as string);
+    const limit: number = parseInt(req.query.limit as string);
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const [posts, count] = await prisma.$transaction([
+      prisma.post.findMany({
+        skip: Number.isNaN(startIndex) ? undefined : startIndex,
+        take: Number.isNaN(limit) ? undefined : limit,
+        where: {
+          author: {
+            username: req.params.username,
+          },
+        },
+        include: {
+          author: {
+            select: {
+              username: true,
+              name: true,
+              profileImg: true,
+            },
+          },
+          likedBy: true,
+          comments: {
+            include: {
+              author: {
+                select: {
+                  username: true,
+                  name: true,
+                  profileImg: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+      prisma.post.count({
+        where: {
+          author: {
+            username: req.params.username,
+          },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      posts,
+      nextPage: endIndex < count ? page + 1 : null,
+    });
+  }
+);
+
+export const get_user_likes = asyncHandler(
+  async (req: Request, res: Response) => {
+    const page: number = parseInt(req.query.page as string);
+    const limit: number = parseInt(req.query.limit as string);
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const [posts] = await prisma.$transaction([
+      prisma.user.findFirst({
+        where: {
+          username: req.params.username,
+        },
+        include: {
+          likes: {
+            skip: Number.isNaN(startIndex) ? undefined : startIndex,
+            take: Number.isNaN(limit) ? undefined : limit,
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      posts: posts!.likes,
+      nextPage: endIndex < posts!._count.likes ? page + 1 : null,
+    });
+  }
+);

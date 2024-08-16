@@ -11,7 +11,6 @@ import {
   update_user,
   get_user,
   get_me,
-  get_by_username,
 } from "../controllers/user-controller";
 import {
   send_request,
@@ -20,6 +19,7 @@ import {
   get_requests,
 } from "../controllers/request-controller";
 import { remove_friend } from "../controllers/friend-controller";
+import { get_user_likes, get_user_posts } from "../controllers/post-controller";
 
 /* GET users listing. */
 router.get("/", get_users);
@@ -46,9 +46,23 @@ router.post(
   update_user
 );
 
-router.get("/username/:username", get_by_username);
+router.get(
+  "/:username",
+  passport.authenticate("jwt", { session: false }),
+  get_user
+);
 
-router.get("/:id", get_user);
+router.get(
+  "/:username/posts",
+  passport.authenticate("jwt", { session: false }),
+  get_user_posts
+);
+
+router.get(
+  "/:username/likes",
+  passport.authenticate("jwt", { session: false }),
+  get_user_likes
+);
 
 router.post("/:id/remove", remove_friend);
 
