@@ -42,6 +42,10 @@ export const get_user = asyncHandler(async (req: Request, res: Response) => {
 
 export const get_by_username = asyncHandler(
   async (req: Request, res: Response) => {
+    const page: number = parseInt(req.query.page as string);
+    const limit: number = parseInt(req.query.limit as string);
+    const startIndex = (page - 1) * limit;
+
     const user = await prisma.user.findFirst({
       where: {
         username: req.params.username,
@@ -53,6 +57,8 @@ export const get_by_username = asyncHandler(
           },
         },
         posts: {
+          skip: Number.isNaN(startIndex) ? undefined : startIndex,
+          take: Number.isNaN(limit) ? undefined : limit,
           include: {
             author: true,
             likedBy: true,
@@ -82,13 +88,20 @@ export const get_by_username = asyncHandler(
 );
 
 export const get_me = asyncHandler(async (req: Request, res: Response) => {
+  const page: number = parseInt(req.query.page as string);
+  const limit: number = parseInt(req.query.limit as string);
+  const startIndex = (page - 1) * limit;
+
   const user = await prisma.user.findFirst({
     where: {
       id: req.user!.id,
     },
     include: {
       comments: true,
-      posts: true,
+      posts: {
+        skip: Number.isNaN(startIndex) ? undefined : startIndex,
+        take: Number.isNaN(limit) ? undefined : limit,
+      },
       likes: {
         include: {
           author: true,

@@ -36,7 +36,13 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
     select: { friends: { select: { id: true } } },
   });
 
+  const page: number = parseInt(req.query.page as string);
+  const limit: number = parseInt(req.query.limit as string);
+  const startIndex = (page - 1) * limit;
+  
   const posts = await prisma.post.findMany({
+    skip: Number.isNaN(startIndex) ? undefined : startIndex,
+    take: Number.isNaN(limit) ? undefined : limit,
     where: {
       author: {
         id: { in: [...friends!.friends.map((user) => user.id), req.user!.id] },
