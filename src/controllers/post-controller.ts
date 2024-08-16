@@ -95,7 +95,7 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
 
   res.status(200).json({
     success: true,
-    posts,
+    data: posts,
     nextPage: endIndex < count ? page + 1 : null,
   });
 });
