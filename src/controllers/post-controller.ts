@@ -324,6 +324,30 @@ export const get_user_likes = asyncHandler(
             orderBy: {
               createdAt: "desc",
             },
+            include: {
+              author: {
+                select: {
+                  username: true,
+                  name: true,
+                  profileImg: true,
+                },
+              },
+              likedBy: true,
+              comments: {
+                include: {
+                  author: {
+                    select: {
+                      username: true,
+                      name: true,
+                      profileImg: true,
+                    },
+                  },
+                },
+                orderBy: {
+                  createdAt: "desc",
+                },
+              },
+            },
           },
           _count: {
             select: {
