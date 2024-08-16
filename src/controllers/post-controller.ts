@@ -91,11 +91,9 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
     }),
   ]);
 
-  console.log(startIndex, endIndex);
-
   res.status(200).json({
     success: true,
-    data: posts,
+    posts,
     nextPage: endIndex < count ? page + 1 : null,
   });
 });
