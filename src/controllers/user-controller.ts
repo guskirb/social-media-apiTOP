@@ -22,24 +22,30 @@ export const get_users = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-export const get_user = asyncHandler(
-  async (req: Request, res: Response) => {
-    const page: number = parseInt(req.query.page as string);
-    const limit: number = parseInt(req.query.limit as string);
-    const startIndex = (page - 1) * limit;
+export const get_user = asyncHandler(async (req: Request, res: Response) => {
+  const page: number = parseInt(req.query.page as string);
+  const limit: number = parseInt(req.query.limit as string);
+  const startIndex = (page - 1) * limit;
 
-    const user = await prisma.user.findFirst({
-      where: {
-        username: req.params.username,
+  const user = await prisma.user.findFirst({
+    where: {
+      username: req.params.username,
+    },
+    include: {
+      _count: {
+        select: {
+          posts: true,
+          friends: true,
+        },
       },
-    });
+    },
+  });
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  }
-);
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
 
 export const get_me = asyncHandler(async (req: Request, res: Response) => {
   const user = await prisma.user.findFirst({
