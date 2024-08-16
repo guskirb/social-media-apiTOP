@@ -39,47 +39,64 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
   const page: number = parseInt(req.query.page as string);
   const limit: number = parseInt(req.query.limit as string);
   const startIndex = (page - 1) * limit;
-  
-  const posts = await prisma.post.findMany({
-    skip: Number.isNaN(startIndex) ? undefined : startIndex,
-    take: Number.isNaN(limit) ? undefined : limit,
-    where: {
-      author: {
-        id: { in: [...friends!.friends.map((user) => user.id), req.user!.id] },
-      },
-    },
-    include: {
-      author: {
-        select: {
-          username: true,
-          name: true,
-          profileImg: true,
-        },
-      },
-      likedBy: true,
-      comments: {
-        include: {
-          author: {
-            select: {
-              username: true,
-              name: true,
-              profileImg: true,
-            },
+  const endIndex = page * limit;
+
+  const [posts, count] = await prisma.$transaction([
+    prisma.post.findMany({
+      skip: Number.isNaN(startIndex) ? undefined : startIndex,
+      take: Number.isNaN(limit) ? undefined : limit,
+      where: {
+        author: {
+          id: {
+            in: [...friends!.friends.map((user) => user.id), req.user!.id],
           },
         },
-        orderBy: {
-          createdAt: "desc",
+      },
+      include: {
+        author: {
+          select: {
+            username: true,
+            name: true,
+            profileImg: true,
+          },
+        },
+        likedBy: true,
+        comments: {
+          include: {
+            author: {
+              select: {
+                username: true,
+                name: true,
+                profileImg: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+    }),
+    prisma.post.count({
+      where: {
+        author: {
+          id: {
+            in: [...friends!.friends.map((user) => user.id), req.user!.id],
+          },
+        },
+      },
+    }),
+  ]);
+
+  console.log(startIndex, endIndex);
 
   res.status(200).json({
     success: true,
     posts,
+    nextPage: endIndex < count ? page + 1 : null,
   });
 });
 
