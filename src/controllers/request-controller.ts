@@ -97,6 +97,7 @@ export const accept_request = asyncHandler(
       res.status(200).json({
         success: true,
         msg: "Request accepted",
+        request: existingRequest,
       });
     } else {
       res.status(400).json({
@@ -126,6 +127,7 @@ export const decline_request = asyncHandler(
       res.status(200).json({
         success: true,
         msg: "Request declined",
+        request: existingRequest,
       });
     } else {
       res.status(400).json({
