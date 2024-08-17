@@ -17,6 +17,7 @@ import {
   accept_request,
   decline_request,
   get_requests,
+  cancel_request,
 } from "../controllers/request-controller";
 import { remove_friend } from "../controllers/friend-controller";
 import { get_user_likes, get_user_posts } from "../controllers/post-controller";
@@ -82,6 +83,12 @@ router.post(
   "/:id/request/decline",
   passport.authenticate("jwt", { session: false }),
   decline_request
+);
+
+router.post(
+  "/:id/request/cancel",
+  passport.authenticate("jwt", { session: false }),
+  cancel_request
 );
 
 export default router;

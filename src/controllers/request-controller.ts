@@ -137,3 +137,33 @@ export const decline_request = asyncHandler(
     }
   }
 );
+
+export const cancel_request = asyncHandler(
+  async (req: Request, res: Response) => {
+    const existingRequest = await prisma.friendRequest.findFirst({
+      where: {
+        fromUserId: req.user!.id,
+        toUserId: req.params.id,
+      },
+    });
+
+    if (existingRequest) {
+      await prisma.friendRequest.delete({
+        where: {
+          id: existingRequest.id,
+        },
+      });
+
+      res.status(200).json({
+        success: true,
+        msg: "Request cancelled",
+        request: existingRequest,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        msg: "Request doesn't exist",
+      });
+    }
+  }
+);
