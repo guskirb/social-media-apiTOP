@@ -30,6 +30,14 @@ export const prisma =
             return DateTime.fromJSDate(comment.createdAt).toRelative();
           },
         },
-      }
+      },
+      friendRequest: {
+        sentFormatted: {
+          needs: { sentAt: true },
+          compute(friendRequest) {
+            return DateTime.fromJSDate(friendRequest.sentAt).toRelative();
+          },
+        },
+      },
     },
   });
