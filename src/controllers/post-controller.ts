@@ -46,11 +46,18 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
       skip: Number.isNaN(startIndex) ? undefined : startIndex,
       take: Number.isNaN(limit) ? undefined : limit,
       where: {
-        author: {
-          id: {
-            in: [...friends!.friends.map((user) => user.id), req.user!.id],
+        AND: [
+          {
+            authorId: {
+              in: [...friends!.friends.map((user) => user.id), req.user!.id],
+            },
           },
-        },
+          {
+            post: {
+              contains: req.query.search as string,
+            },
+          },
+        ],
       },
       include: {
         author: {
@@ -82,11 +89,18 @@ export const get_posts = asyncHandler(async (req: Request, res: Response) => {
     }),
     prisma.post.count({
       where: {
-        author: {
-          id: {
-            in: [...friends!.friends.map((user) => user.id), req.user!.id],
+        AND: [
+          {
+            authorId: {
+              in: [...friends!.friends.map((user) => user.id), req.user!.id],
+            },
           },
-        },
+          {
+            post: {
+              contains: req.query.search as string,
+            },
+          },
+        ],
       },
     }),
   ]);
