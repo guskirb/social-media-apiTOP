@@ -18,6 +18,7 @@ export const remove_friend = asyncHandler(
 
     res.status(200).json({
       success: true,
+      id: req.params.id,
       msg: "Removed friend",
     });
   }

@@ -65,7 +65,11 @@ router.get(
   get_user_likes
 );
 
-router.post("/:id/remove", remove_friend);
+router.post(
+  "/:id/remove",
+  passport.authenticate("jwt", { session: false }),
+  remove_friend
+);
 
 router.post(
   "/:id/request",
