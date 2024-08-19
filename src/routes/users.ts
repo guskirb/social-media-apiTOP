@@ -23,7 +23,7 @@ import { remove_friend } from "../controllers/friend-controller";
 import { get_user_likes, get_user_posts } from "../controllers/post-controller";
 
 /* GET users listing. */
-router.get("/", get_users);
+router.get("/", passport.authenticate("jwt", { session: false }), get_users);
 
 router.get("/me", passport.authenticate("jwt", { session: false }), get_me);
 

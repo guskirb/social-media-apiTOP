@@ -9,6 +9,24 @@ import { issueJWT } from "../utils/issue-jwt";
 
 export const get_users = asyncHandler(async (req: Request, res: Response) => {
   const users = await prisma.user.findMany({
+    where: {
+      ...(req.query.search
+        ? {
+            OR: [
+              {
+                username: {
+                  contains: req.query.search as string,
+                },
+              },
+              {
+                name: {
+                  contains: req.query.search as string,
+                },
+              },
+            ],
+          }
+        : {}),
+    },
     include: {
       friends: true,
       requests: true,
