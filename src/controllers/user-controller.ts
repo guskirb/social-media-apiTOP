@@ -59,6 +59,7 @@ export const get_user = asyncHandler(async (req: Request, res: Response) => {
       username: req.params.username,
     },
     include: {
+      friends: true,
       _count: {
         select: {
           posts: true,
