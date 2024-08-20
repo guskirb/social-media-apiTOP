@@ -8,29 +8,38 @@ import { prisma } from "../lib/prisma";
 import { issueJWT } from "../utils/issue-jwt";
 
 export const get_users = asyncHandler(async (req: Request, res: Response) => {
+  const limit: number = parseInt(req.query.limit as string);
   const users = await prisma.user.findMany({
+    take: Number.isNaN(limit) ? undefined : limit,
     where: {
-      ...(req.query.search
-        ? {
-            OR: [
-              {
-                username: {
-                  contains: req.query.search as string,
-                },
-              },
-              {
-                name: {
-                  contains: req.query.search as string,
-                },
-              },
-            ],
-          }
-        : {}),
+      AND: [
+        {
+          ...(req.query.search
+            ? {
+                OR: [
+                  {
+                    username: {
+                      contains: req.query.search as string,
+                    },
+                  },
+                  {
+                    name: {
+                      contains: req.query.search as string,
+                    },
+                  },
+                ],
+              }
+            : {}),
+        },
+        {
+          NOT: {
+            id: req.user!.id,
+          },
+        },
+      ],
     },
-    include: {
-      friends: true,
-      requests: true,
-      outgoingRequests: true,
+    orderBy: {
+      joinedAt: "desc",
     },
   });
 
