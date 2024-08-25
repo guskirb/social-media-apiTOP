@@ -19,7 +19,9 @@ export const prisma =
         createdFormatted: {
           needs: { createdAt: true },
           compute(post) {
-            return DateTime.fromJSDate(post.createdAt).toRelative();
+            return DateTime.fromJSDate(post.createdAt).toRelative({
+              style: "short",
+            });
           },
         },
       },
@@ -27,7 +29,9 @@ export const prisma =
         createdFormatted: {
           needs: { createdAt: true },
           compute(comment) {
-            return DateTime.fromJSDate(comment.createdAt).toRelative();
+            return DateTime.fromJSDate(comment.createdAt).toRelative({
+              style: "short",
+            });
           },
         },
       },
