@@ -8,52 +8,85 @@ import { prisma } from "../lib/prisma";
 import { issueJWT } from "../utils/issue-jwt";
 
 export const get_users = asyncHandler(async (req: Request, res: Response) => {
+  const page: number = parseInt(req.query.page as string);
   const limit: number = parseInt(req.query.limit as string);
-  const users = await prisma.user.findMany({
-    take: Number.isNaN(limit) ? undefined : limit,
-    where: {
-      AND: [
-        {
-          ...(req.query.search
-            ? {
-                OR: [
-                  {
-                    username: {
-                      contains: req.query.search as string,
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  const [users, count] = await prisma.$transaction([
+    prisma.user.findMany({
+      skip: Number.isNaN(startIndex) ? undefined : startIndex,
+      take: Number.isNaN(limit) ? undefined : limit,
+      where: {
+        AND: [
+          {
+            ...(req.query.search
+              ? {
+                  OR: [
+                    {
+                      username: {
+                        contains: req.query.search as string,
+                      },
                     },
-                  },
-                  {
-                    name: {
-                      contains: req.query.search as string,
+                    {
+                      name: {
+                        contains: req.query.search as string,
+                      },
                     },
-                  },
-                ],
-              }
-            : {}),
-        },
-        {
-          NOT: {
-            id: req.user!.id,
+                  ],
+                }
+              : {}),
           },
-        },
-      ],
-    },
-    orderBy: {
-      joinedAt: "desc",
-    },
-  });
+          {
+            NOT: {
+              id: req.user!.id,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        joinedAt: "desc",
+      },
+    }),
+    prisma.user.count({
+      where: {
+        AND: [
+          {
+            ...(req.query.search
+              ? {
+                  OR: [
+                    {
+                      username: {
+                        contains: req.query.search as string,
+                      },
+                    },
+                    {
+                      name: {
+                        contains: req.query.search as string,
+                      },
+                    },
+                  ],
+                }
+              : {}),
+          },
+          {
+            NOT: {
+              id: req.user!.id,
+            },
+          },
+        ],
+      },
+    }),
+  ]);
 
   res.status(200).json({
     success: true,
     users,
+    nextPage: endIndex < count ? page + 1 : null,
   });
 });
 
 export const get_user = asyncHandler(async (req: Request, res: Response) => {
-  const page: number = parseInt(req.query.page as string);
-  const limit: number = parseInt(req.query.limit as string);
-  const startIndex = (page - 1) * limit;
-
   const user = await prisma.user.findFirst({
     where: {
       username: req.params.username,
