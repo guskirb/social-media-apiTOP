@@ -7,6 +7,7 @@ This is the backend of the Connect social network application. An express, NodeJ
 * Fully stateless auth, verifies JWT token using HTTP auth request headers.
 * Validates and escapes post data using express-validator.
 * Optional search and page/limit query parameters for pagination on posts and users requests.
+* Uses Express async handler middleware to catch errors.
 ## Project Stack
 Frontend: <br>
 [![My Skills](https://skillicons.dev/icons?i=ts,react,tailwind,vite)](https://skillicons.dev)<br>
